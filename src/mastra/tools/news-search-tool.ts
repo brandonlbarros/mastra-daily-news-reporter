@@ -19,10 +19,7 @@ export const newsSearch = createTool({
   execute: async inputData => {
     const exa = new Exa(process.env.EXA_API_KEY)
 
-    const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-
     const { results } = await exa.search<{ text: true }>(inputData.query, {
-      startPublishedDate: since24h,
       category: "news",
       numResults: 5,
       contents: { text: true },

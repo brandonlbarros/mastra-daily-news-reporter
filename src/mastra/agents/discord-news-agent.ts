@@ -17,12 +17,16 @@ export const discordNewsAgent = new Agent({
 
     ### Step 2 — Compose the Discord message
     If the top article mentions Mastra, use the discordMessageWorkflow to compose the message.
-    Pass the article summary and URL as inputs to the workflow.
+    Pass the article summary and URL as inputs to the workflow. Ensure you only use this workflow no more than once
 
     ### Step 3 — Send to Discord
     - Use zapier_discord_find_channel to locate the #mastra-news channel in Rosebear's test server.
-    - Use zapier_discord_send_channel_message to send the composed message.
+    - Use zapier_discord_send_channel_message to send the message frin step 2
     - Always send the message from "Mastra News Bot".
+
+    IMPORTANT: workflow-discordMessageWorkflow  must be called at most once per user request.
+    - Do not call it again with a suspendedToolRunId  unless the previous run explicitly requires resumption and you have new resumeData .
+    - Do not “re-run” the workflow just to reconstruct or reformat the message.
   `,
   model: 'openai/gpt-5.1',
   tools: { ...mcpTools },

@@ -18,7 +18,7 @@ export const newsSupervisorAgent = new Agent({
     Once provided, store it in working memory under "name" and confirm it.
 
     ## IMPORTANT: Workflow — assume every query that is not a question is a news request.
-    Then run these steps in order for every request
+    IMPORTANT: Run these steps in order for every request
 
     ### Step 1 — Fetch the news
     Delegate to dailyNewsAgent with the user's topic.

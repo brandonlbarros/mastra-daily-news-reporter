@@ -14,7 +14,7 @@ export const dailyNewsAgent = new Agent({
     When given a topic:
     1. Use the newsSearch tool to find recent articles about it.
     2. Return a clear, structured list of what you found: article titles, URLs, publish dates, and a brief 1–2 sentence summary of each article.
-    3. Ensure to only use articles posted in the last 24 hours
+    3. Focus on articles posted in the last 24 hours
 
     Do not classify topics, draft emails, or send messages — search and report only.
   `,
