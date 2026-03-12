@@ -1,0 +1,27 @@
+{
+  "climate": [
+    "sarah.chen@mastraventures.com",
+    "tom.harris@mastraventures.com",
+    "priya.nair@mastraventures.com"
+  ],
+  "fintech": [
+    "james.okonkwo@mastraventures.com",
+    "lisa.tanaka@mastraventures.com",
+    "michael.ross@mastraventures.com"
+  ],
+  "consumer": [
+    "nina.garcia@mastraventures.com",
+    "oliver.chang@mastraventures.com",
+    "rachel.kim@mastraventures.com"
+  ],
+  "enterprise": [
+    "steven.patel@mastraventures.com",
+    "tara.murphy@mastraventures.com",
+    "umar.hassan@mastraventures.com"
+  ],
+  "health": [
+    "diana.foster@mastraventures.com",
+    "kevin.wu@mastraventures.com",
+    "amara.osei@mastraventures.com"
+  ]
+}
