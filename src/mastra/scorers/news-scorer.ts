@@ -34,26 +34,13 @@ export const recencyScorer = createScorer({
     const response = getAssistantMessageFromRunOutput(run.output) || '';
     const referenceDate = new Date().toISOString();
 
-    // Treat undated articles as published at midnight EDT (UTC-4) on the date they appear to be from.
-    // EDT offset in hours:
-    const edtOffsetHours = -4;
-    const edtOffsetMs = edtOffsetHours * 60 * 60 * 1000;
-
-    // Compute today's midnight in EDT, expressed as an ISO string, so the LLM
-    // has a concrete anchor when a publish date has no time component.
-    const nowUtcMs = Date.now();
-    const nowEdtMs = nowUtcMs + edtOffsetMs;
-    const nowEdtDate = new Date(nowEdtMs);
-    const noonEdtIso = new Date(
-      Date.UTC(
-        nowEdtDate.getUTCFullYear(),
-        nowEdtDate.getUTCMonth(),
-        nowEdtDate.getUTCDate(),
-        16, 0, 0, 0, // noon EDT = 16:00 UTC
-      )
+    // Treat undated articles as published at 11:59 PM UTC on the date they appear to be from.
+    const now = new Date();
+    const endOfDayUtcIso = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 0, 0)
     ).toISOString();
 
-    return { response, referenceDate, noonEdtIso };
+    return { response, referenceDate, endOfDayUtcIso };
   })
   .analyze({
     description: 'Evaluate per-article recency relative to today, then average',
@@ -75,10 +62,9 @@ export const recencyScorer = createScorer({
       ${results.preprocessStepResult.referenceDate}
       """
 
-      Today's noon in EDT (UTC-4) — use this as the assumed publication time
-      for any article that has a date but no explicit time component:
+      Assumed publication time for articles with a date but no explicit time (11:59 PM UTC today):
       """
-      ${results.preprocessStepResult.noonEdtIso}
+      ${results.preprocessStepResult.endOfDayUtcIso}
       """
 
       Agent response (contains multiple articles):
@@ -93,8 +79,8 @@ export const recencyScorer = createScorer({
          If so, set continuouslyUpdated to true and skip steps 3–5 (set dateFound and hoursAgo to null, withinLastDay to true).
       3) Otherwise, find the most recent date or timestamp explicitly mentioned or strongly implied.
          - If the article has a full timestamp (date + time), use it as-is.
-         - If the article has only a date with no time, assume it was published at noon EDT
-           (i.e., use the "Today's noon in EDT" value above, adjusted to the article's date).
+         - If the article has only a date with no time, assume it was published at 11:59 PM UTC
+           (i.e., use the "Assumed publication time" value above, adjusted to the article's date).
       4) Calculate approximately how many hours ago that was relative to the current date and time above.
       5) Set withinLastDay to true if hoursAgo <= 24.
          If no date can be determined, set dateFound and hoursAgo to null and withinLastDay to false.
