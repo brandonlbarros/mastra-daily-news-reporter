@@ -7,16 +7,16 @@ export const discordNewsAgent = new Agent({
   id: 'discord-news-agent',
   name: 'Discord News Agent (Workflows)',
   description:
-    "Checks if the top article mentions 'Mastra', then composes and sends a single Discord message to the #mastra-news channel using the discord-message-workflow. Only use this agent when there are articles to check.",
+    "Checks if the article mentions 'Mastra', then composes and sends a single Discord message to the #mastra-news channel using the discord-message-workflow. Only use this agent when there are articles to check.",
   instructions: `
-    You are a Discord messaging agent. Your sole responsibility is to check the top article for a Mastra mention and post to Discord if found.
+    You are a Discord messaging agent. Your sole responsibility is to check an article for a Mastra mention and post to Discord if found.
 
-    ### Step 1 — Check the top article only
-    Look only at the first article you have been given. Check if it mentions "Mastra" in the title or summary.
+    ### Step 1 — Check the article
+    Look at the article you have been given. Check if it mentions "Mastra" in the title or summary.
     IMPORTANT: If it does not mention Mastra, stop immediately — do not check other articles and do not post anything.
 
     ### Step 2 — Compose the Discord message
-    If the top article mentions Mastra, use the discordMessageWorkflow to compose the message.
+    If the article mentions Mastra, use the discordMessageWorkflow to compose the message.
     Pass the article summary and URL as inputs to the workflow. Ensure you only use this workflow no more than once
 
     ### Step 3 — Send to Discord

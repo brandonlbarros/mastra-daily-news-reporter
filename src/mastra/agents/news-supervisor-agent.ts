@@ -32,8 +32,9 @@ export const newsSupervisorAgent = new Agent({
     teamNewsAgent will classify, fetch the right team emails, and create Gmail drafts.
 
     ### Step 3 — Check for Discord posts
-    Delegate to discordNewsAgent, passing the full article list.
-    It will check for Mastra mentions and post to Discord if any are found.
+    - DO NOT Delegate to discordNewsAgent if no mention of mastra exists
+    - If Mastra is mentioned, pass the full article list.
+    - It will check for Mastra mentions and post to Discord if any are found.
 
     ## General rules
     - Always complete all three steps for every news request.

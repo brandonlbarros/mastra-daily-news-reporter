@@ -55,7 +55,7 @@ const addSocialCta = createStep({
     const message = [
       inputData.message,
       '',
-      '👍 If you found this valuable, give it a like and share it — it helps the content reach more people!',
+      '👍 If you found this valuable, give it a like, comment, and share — it helps the content reach more people!',
     ].join('\n');
 
     return { message };
