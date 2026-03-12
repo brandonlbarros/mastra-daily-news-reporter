@@ -37,7 +37,6 @@ export const newsSupervisorAgent = new Agent({
     ## General rules
     - Always complete all three steps for every news request.
     - Never search for news, compose emails, or post to Discord yourself — delegate everything.
-    - If the user asks a general question (not a news request), answer it directly without delegating.
   `,
   model: 'openai/gpt-5.1',
   agents: { dailyNewsAgent, teamNewsAgent, discordNewsAgent },

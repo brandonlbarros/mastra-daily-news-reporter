@@ -76,11 +76,6 @@ The system uses Zapier's MCP integration to draft Gmail emails and send Discord 
 4. In Zapier, navigate to the **MCP** section and enable it
 5. Copy the generated MCP endpoint URL into `.env` as `ZAPIER_MCP_URL`
 
-The system calls these three Zapier actions:
-- `zapier_gmail_create_draft` — creates email drafts (never sends automatically)
-- `zapier_discord_find_channel` — resolves a channel name to an ID
-- `zapier_discord_send_channel_message` — posts to a channel
-
 ### 5. Start Mastra Studio
 
 ```bash
@@ -91,9 +86,11 @@ Studio opens at [http://localhost:4111](http://localhost:4111). Select **News Su
 
 ---
 
-## Agents
+## Appendix
 
-### News Supervisor Agent
+### Agents
+
+#### News Supervisor Agent
 
 **File:** `src/mastra/agents/news-supervisor-agent.ts`
 
@@ -101,7 +98,7 @@ The entry point and coordinator. It never searches, drafts, or posts anything it
 
 On your first message it will ask for your name and store it in working memory. Your name is used to sign all outgoing team emails and is remembered across sessions. After that, any message that isn't a direct question is treated as a news request and triggers the full three-step workflow below.
 
-### Daily News Agent
+#### Daily News Agent
 
 **File:** `src/mastra/agents/daily-news-agent.ts`
 
@@ -109,7 +106,7 @@ Handles Step 1: finding the news. Given a topic, it calls the `newsSearch` tool 
 
 The `recencyScorer` is attached to this agent and runs on every response, continuously tracking how fresh the returned articles are.
 
-### Team News Agent
+#### Team News Agent
 
 **File:** `src/mastra/agents/team-news-agent.ts`
 
@@ -126,53 +123,33 @@ Handles Step 2: briefing the right internal teams. It receives the article list 
 
 Drafts are never sent automatically. They land in your Gmail Drafts folder for review.
 
-### Discord News Agent
+#### Discord News Agent
 
 **File:** `src/mastra/agents/discord-news-agent.ts`
 
-Handles Step 3: Discord alerting. It checks only the top article from the list. If that article mentions "Mastra" in the title or summary, it runs the article through the `discordMessageWorkflow` to compose a formatted message, then posts it to the `#mastra-news` channel via Zapier. If the top article does not mention Mastra, it stops immediately without posting anything.
+Handles Step 3: Discord alerting. It checks only the top article from the list. If that article mentions "Mastra" in the title or summary, it composes a formatted message and posts it to the `#mastra-news` channel via Zapier. If the top article does not mention Mastra, it stops immediately without posting anything.
 
 ---
 
-## Workflows
+### Data Files
 
-### Discord Message Workflow
-
-**File:** `src/mastra/workflows/discord-message-workflow.ts`
-
-Responsible for composing the Discord message body. It takes an article summary and URL, then branches on the URL type:
-
-- **Social media URL** (Twitter/X, LinkedIn, Instagram, etc.) — appends a likes-and-shares call-to-action
-- **Regular article URL** — appends a peer-sharing call-to-action
-
-Both branches merge into a single formatted message that the Discord News Agent then sends.
-
----
-
-## Data Files
-
-### Email List
+#### Email List
 
 **File:** `src/emailList.json`
 
-The firm's internal email directory. It has two top-level keys:
-
-- `subscriber` — a general list of external subscribers
-- `internal` — an object keyed by investment area (`climate`, `fintech`, `consumer`, `enterprise`, `health`), each containing an array of `@mastraventures.com` addresses
-
-Update this file with real team email addresses before going to production.
+The firm's internal email directory, keyed by investment area (`climate`, `fintech`, `consumer`, `enterprise`, `health`). Update this file with real team email addresses before going to production.
 
 ---
 
-## Evaluation
+### Evaluation
 
 The system includes a built-in evaluation pipeline to measure how well the Daily News Agent is performing over time.
 
-### Recency Scorer
+#### Recency Scorer
 
 **File:** `src/mastra/scorers/news-scorer.ts`
 
-An LLM judge that evaluates how fresh the articles in an agent response are. It scores each article individually, then averages across all articles in the response:
+An LLM judge that evaluates how fresh the articles in an agent response are. Scores each article individually, then averages:
 
 | Age of article | Score |
 |---|---|
@@ -182,39 +159,29 @@ An LLM judge that evaluates how fresh the articles in an agent response are. It 
 | Older than 72 hours | 0.0 |
 | Live / continuously updated | 1.0 |
 
-The scorer is attached directly to the Daily News Agent and runs on every response at a 100% sampling rate.
-
-### Dataset
+#### Dataset
 
 **File:** `src/mastra/datasets/recency-dataset.ts`
 
-Seeds the `news-recency` dataset in Mastra's local storage with five test queries: AI, Climate, Healthcare, COVID, and COVID 2020. Run this once to set up the dataset:
+Seeds the `news-recency` dataset with five test queries. Run once:
 
 ```bash
 npx tsx src/mastra/datasets/recency-dataset.ts
 ```
 
-### Experiment Script
+#### Experiment Script
 
 **File:** `src/mastra/scripts/news-recency-experiment-script.ts`
 
-Runs the `news-recency` dataset through the Daily News Agent with the Recency Scorer applied, then prints color-coded results in your terminal:
-
-- **Green** — score ≥ 0.75 (articles are fresh)
-- **Yellow** — score 0.25–0.74 (mixed freshness)
-- **Red** — score < 0.25 (articles are stale)
-
-Run any time after seeding the dataset:
+Runs the dataset through the Daily News Agent + Recency Scorer and prints color-coded results (green = fresh, yellow = mixed, red = stale):
 
 ```bash
 npx tsx src/mastra/scripts/news-recency-experiment-script.ts
 ```
 
-Results are also persisted to local storage and visible in the **Datasets** panel in Mastra Studio.
-
 ---
 
-## Project Structure
+### Project Structure
 
 ```
 src/
