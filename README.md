@@ -33,7 +33,7 @@ flowchart TD
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 22.13.0+ and npm
 - An [OpenAI](https://platform.openai.com) account with API access
 - An [Exa](https://exa.ai) account with API credits
 - A [Zapier](https://zapier.com) account with Gmail and Discord connected

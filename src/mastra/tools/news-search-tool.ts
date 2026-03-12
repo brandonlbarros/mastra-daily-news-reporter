@@ -19,18 +19,10 @@ export const newsSearch = createTool({
   execute: async inputData => {
     const exa = new Exa(process.env.EXA_API_KEY)
 
-    // Use today's midnight EDT (UTC-4 = 04:00 UTC) as the cutoff so that
-    // articles with no time component are treated as published at midnight EDT.
-    const now = new Date()
-    const edtMidnight = new Date(Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate(),
-      4, 0, 0, 0,  // midnight EDT = 04:00 UTC
-    ))
+    const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
 
     const { results } = await exa.search<{ text: true }>(inputData.query, {
-      startPublishedDate: edtMidnight.toISOString(),
+      startPublishedDate: since24h,
       category: "news",
       numResults: 5,
       contents: { text: true },
