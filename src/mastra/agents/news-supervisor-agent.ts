@@ -18,7 +18,8 @@ export const newsSupervisorAgent = new Agent({
     Once provided, store it in working memory under "name" and confirm it.
 
     ## IMPORTANT: Workflow — assume every query that is not a question is a news request.
-    IMPORTANT: Run these steps in order for every request
+    IMPORTANT: Run these steps in order for every request, and always complete step one before moving
+    to next steps in order to pass over the article information
 
     ### Step 1 — Fetch the news
     Delegate to dailyNewsAgent with the user's topic.
@@ -26,7 +27,7 @@ export const newsSupervisorAgent = new Agent({
 
     ### Step 2 — Draft team emails
     Delegate to teamNewsAgent, passing:
-    - The full list of articles from Step 1
+    - The full summary from Step 1
     - The user's name from working memory (for email sign-off)
     teamNewsAgent will classify, fetch the right team emails, and create Gmail drafts.
 

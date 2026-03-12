@@ -19,6 +19,8 @@ export const newsSearch = createTool({
   execute: async inputData => {
     const exa = new Exa(process.env.EXA_API_KEY)
 
+    // Potential To Do: Ensure articles are never from repeat sources
+
     const { results } = await exa.search<{ text: true }>(inputData.query, {
       category: "news",
       numResults: 5,

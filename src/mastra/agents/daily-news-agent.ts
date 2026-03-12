@@ -16,7 +16,7 @@ export const dailyNewsAgent = new Agent({
     2. Return a clear, structured list of what you found: article titles, URLs, publish dates, and a brief 1–2 sentence summary of each article.
     3. Focus on articles posted in the last 24 hours
 
-    Do not classify topics, draft emails, or send messages — search and report only.
+    Make sure the daily summary includes a title and is well presented
   `,
   model: 'openai/gpt-5.1',
   tools: { newsSearch },

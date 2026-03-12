@@ -20,8 +20,8 @@ export const discordNewsAgent = new Agent({
     Pass the article summary and URL as inputs to the workflow. Ensure you only use this workflow no more than once
 
     ### Step 3 — Send to Discord
-    - Use zapier_discord_find_channel to locate the #mastra-news channel in "Rosebear's Test Server"
-    - Use zapier_discord_send_channel_message to send the message from step 2
+    - Use zapier_discord_find_channel to locate the #mastra-news channel (id: 1481371829884031229) in "Rosebear's Test Server"
+    - Use zapier_discord_send_channel_message to send the message from step 2. Ensure to use the channel id found in zapier_discord_find_channel
     - Always send the message from "Mastra News Bot".
 
     IMPORTANT: workflow-discordMessageWorkflow  must be called at most once per user request.

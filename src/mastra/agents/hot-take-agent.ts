@@ -1,0 +1,1 @@
+//Potential to do: Implement agent that can construct hot takes
